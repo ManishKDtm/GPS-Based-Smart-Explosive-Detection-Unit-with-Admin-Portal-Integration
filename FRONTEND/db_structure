@@ -1,0 +1,92 @@
+{
+  "mines": {
+    "-ID1": {
+      "latitude": 34.052235,
+      "longitude": -118.243683,
+      "timestamp": "2025-06-12 21:28:10"
+    },
+    "-ID2": {
+      "latitude": 37.774929,
+      "longitude": -122.419418,
+      "timestamp": "2025-06-13 22:49:53"
+    },
+    "-ID3": {
+      "latitude": 37.774929,
+      "longitude": -122.419418,
+      "timestamp": "2025-06-13 22:53:39"
+    },
+    "-ID4": {
+      "latitude": 36.169941,
+      "longitude": -115.139832,
+      "timestamp": "2025-06-15 23:00:54"
+    },
+    "-ID5": {
+      "latitude": 36.170021,
+      "longitude": -115.139950,
+      "timestamp": "2025-06-15 23:01:41"
+    },
+    "-ID6": {
+      "latitude": 36.170100,
+      "longitude": -115.140000,
+      "timestamp": "2025-06-15 23:01:53"
+    },
+    "-ID7": {
+      "latitude": 36.170200,
+      "longitude": -115.140100,
+      "timestamp": "2025-06-15 23:02:38"
+    }
+  },
+  "rover_position": {
+    "latitude": 36.170050,
+    "longitude": -115.139900,
+    "timestamp": "2025-06-14 01:37:27"
+  },
+  "status": {
+    "gps": "Valid",
+    "metal": "Clear",
+    "wifi": "Connected"
+  },
+  "users": {
+    "user1": {
+      "captain": "Anon",
+      "designation": "Officer",
+      "email": "user1@example.com",
+      "name": "User One",
+      "rank": "1",
+      "regiment": "Alpha"
+    },
+    "user2": {
+      "captain": "Anon",
+      "designation": "Supervisor",
+      "email": "user2@example.com",
+      "name": "User Two",
+      "rank": "2",
+      "regiment": "Bravo"
+    },
+    "user3": {
+      "captain": "Anon",
+      "designation": "Analyst",
+      "email": "user3@example.com",
+      "name": "User Three",
+      "rank": "3",
+      "regiment": "Charlie",
+      "role": "user"
+    },
+    "user4": {
+      "captain": "Anon",
+      "designation": "Admin",
+      "email": "admin@example.com",
+      "name": "Admin User",
+      "rank": "4",
+      "regiment": "Delta"
+    },
+    "user5": {
+      "captain": "Anon",
+      "designation": "Operator",
+      "email": "user5@example.com",
+      "name": "User Five",
+      "rank": "5",
+      "regiment": "Echo"
+    }
+  }
+}
