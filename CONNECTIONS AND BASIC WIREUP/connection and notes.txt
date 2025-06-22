@@ -1,0 +1,48 @@
+🔧 Components Used
+This project involves two main modules: an ESP32-based Mine-Detecting Rover and an ESP32-CAM Live Streaming Unit. Both are powered and controlled independently, communicating over a local network.
+
+📦 Rover Unit (ESP32-based)
+Primary Controller: ESP32 Dev Board
+
+🧩 Electronics:
+
+| Component                  | Purpose / Description   |
+| ESP32 Dev Board        | Main controller for mine detection and motor control             |
+| Metal Detector Sensor  | Detects presence of metal/mines via digital input pin            |
+| L293D Motor Driver     | Dual H-Bridge motor driver to control rover's movement           |
+| DC Geared Motors (x4)  | Drives the rover, one for each side                              |
+| PWM Control (ENA/ENB)  | Speed control for left/right motors via PWM pins                 |
+| I2C LCD Display (16x2) | Real-time display of status, coordinates, and detection          |
+| GPS Module (Neo-6M)    | Fetches current coordinates (connected via `HardwareSerial`)     |
+| ESP32 Pins Used:       | `a1(32), a2(14), b1(12), b2(13), ena(25), enb(26), metalPin(15)` |
+
+
+📷 ESP32-CAM Live Streaming Unit
+Primary Controller: AI-Thinker ESP32-CAM
+
+🧩 Electronics:
+| Component                      | Purpose / Description |
+| ESP32-CAM (AI-Thinker)     | Video streaming unit with onboard OV2640 camera   |
+| Camera Module (OV2640)     | Captures live video feed at QVGA resolution       |
+| Onboard Flash LED (GPIO 4) | Optional lighting for low-light environments      |
+| Power Supply               | 5V regulated supply for ESP32-CAM                 |
+| Wi-Fi                      | Stream live MJPEG feed to browser on same network |
+
+
+
+🔌 Power Supply Requirements
+
+| Unit        | Voltage | Current (Approx.) |
+| ESP32 Rover | 5V      | ≥ 1A              |
+| ESP32-CAM   | 5V      | ≥ 700mA           |
+| Motors      | 6–12V   | Based on spec     |
+
+
+
+
+🛠 Additional Notes
+Communication Between ESP32 & ESP32-CAM is handled over Wi-Fi, no physical wiring is needed between them.
+
+Ensure secure power supply and voltage regulation (especially for ESP32-CAM) to avoid brownouts.
+
+Firebase security is currently open for development – not recommended for production.
