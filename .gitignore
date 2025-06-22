@@ -1,32 +1,73 @@
-# Prerequisites
+# ───── Arduino / ESP32 build artifacts ─────
+*.elf
+*.hex
+*.bin
+*.eep
+*.map
+*.out
 *.d
-
-# Compiled Object files
-*.slo
-*.lo
 *.o
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
 *.a
-*.lib
+*.so
 
-# Executables
-*.exe
-*.out
-*.app
+# ───── Arduino IDE files ─────
+*.ino.*
+.arduinoIDE/
+.arduino/
+*.pde
+
+# ───── PlatformIO (if used) ─────
+.pio/
+.pioenvs/
+.clangd/
+*.pio
+libdeps/
+
+# ───── VS Code ─────
+.vscode/
+*.code-workspace
+
+# ───── Web UI files ─────
+/dist/
+/build/
+/cache/
+/node_modules/
+/*.log
+*.gz
+*.zip
+*.min.*
+*.map
+.DS_Store
+Thumbs.db
+
+# ───── Compiled HTML/CSS/JS (if using build tools) ─────
+*.tsbuildinfo
+*.tmp
+*.bak
+*.swp
+*.swo
+*.swn
+
+# ───── Firebase and Secrets (DO NOT COMMIT) ─────
+firebase-service-account.json
+secrets.h
+wifi_credentials.h
+.env
+.env.*
+firebase.json
+
+# ───── Optional Project-specific ─────
+/data/        # If you're using SPIFFS LittleFS data upload folders
+*.pyc         # Python bytecode (if any scripts are used)
+__pycache__/
+.cache/
+*.log
+
+# ───── Editor / OS metadata ─────
+.DS_Store
+*.iml
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.bak
