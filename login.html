@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Landmine Detector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts for tech/military look -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto Mono', 'Segoe UI', Arial, sans-serif;
+            overflow: hidden;
+            background: #0a141e;
+        }
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: linear-gradient(120deg, rgba(10,20,30,0.85) 60%, rgba(46,139,87,0.3) 100%);
+            z-index: 1;
+        }
+        .login-container {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            background: rgba(10, 20, 30, 0.85);
+            border-radius: 12px;
+            box-shadow: 0 4px 32px #000a;
+            padding: 2.5em 2em 2em 2em;
+            width: 90vw;
+            max-width: 370px;
+            text-align: center;
+        }
+        .cyborg-anim {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1.2em auto;
+            display: block;
+        }
+        .cyborg-eye {
+            animation: eye-glow 1.2s infinite alternate;
+        }
+        @keyframes eye-glow {
+            0% { fill: #7fffd4; filter: drop-shadow(0 0 2px #7fffd4); }
+            100% { fill: #2e8b57; filter: drop-shadow(0 0 8px #7fffd4); }
+        }
+        .login-title {
+            font-family: 'Orbitron', 'Roboto Mono', monospace;
+            color: #7fffd4;
+            font-size: 2em;
+            letter-spacing: 3px;
+            margin-bottom: 0.5em;
+            text-transform: uppercase;
+        }
+        .login-subtitle {
+            color: #b0c4de;
+            font-size: 1em;
+            margin-bottom: 2em;
+            font-family: 'Roboto Mono', monospace;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2em;
+        }
+        .login-form input {
+            padding: 0.9em 1em;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: 'Roboto Mono', monospace;
+            background: #1a2a36;
+            color: #e0e8ef;
+            box-shadow: 0 2px 8px #0004;
+            outline: none;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .login-form input:focus {
+            background: #223a4d;
+            box-shadow: 0 0 0 2px #7fffd4;
+        }
+        .btn {
+            padding: 1em 2.5em;
+            font-size: 1.1em;
+            background: linear-gradient(90deg, #2e8b57 60%, #7fffd4 100%);
+            color: #0a141e;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Orbitron', 'Roboto Mono', monospace;
+            font-weight: 700;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 24px #0008;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #7fffd4 60%, #2e8b57 100%);
+            color: #222;
+            transform: scale(1.05);
+        }
+        .login-links {
+            margin-top: 1.5em;
+            font-size: 0.95em;
+            color: #b0c4de;
+        }
+        .login-links a {
+            color: #7fffd4;
+            text-decoration: none;
+            margin: 0 0.5em;
+            transition: color 0.2s;
+        }
+        .login-links a:hover {
+            color: #2e8b57;
+        }
+        .start-anim-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #0a141e;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease;
+        }
+        .start-anim-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .radar-svg {
+            width: 120px;
+            height: 120px;
+            display: block;
+        }
+        .radar-pulse {
+            stroke: #7fffd4;
+            stroke-width: 4;
+            fill: none;
+            opacity: 0.7;
+            animation: radar-pulse 1.2s infinite;
+        }
+        @keyframes radar-pulse {
+            0% {
+                r: 20;
+                opacity: 0.7;
+            }
+            80% {
+                r: 55;
+                opacity: 0.1;
+            }
+            100% {
+                r: 20;
+                opacity: 0.7;
+            }
+        }
+        .radar-center {
+            fill: #2e8b57;
+            stroke: #7fffd4;
+            stroke-width: 2;
+        }
+        .radar-text {
+            font-family: 'Orbitron', 'Roboto Mono', monospace;
+            fill: #7fffd4;
+            font-size: 1.1em;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            letter-spacing: 2px;
+        }
+        @media (max-width: 600px) {
+            .login-container { padding: 1.5em 0.5em 1em 0.5em; }
+            .login-title { font-size: 1.3em; }
+            .cyborg-anim { width: 60px; height: 60px; }
+        }
+    </style>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var anim = document.getElementById('start-anim-overlay');
+                if (anim) anim.classList.add('fade-out');
+            }, 1200); // Animation duration
+        });
+    </script>
+</head>
+<body>
+    <div class="start-anim-overlay" id="start-anim-overlay">
+        <svg class="radar-svg" viewBox="0 0 100 100">
+            <circle class="radar-pulse" cx="50" cy="50" r="20"/>
+            <circle class="radar-center" cx="50" cy="50" r="16"/>
+            <text class="radar-text" x="50" y="54">LOGIN</text>
+        </svg>
+    </div>
+    <div class="overlay"></div>
+    <div class="login-container">
+        <!-- Simple cyborg SVG animation -->
+        <svg class="cyborg-anim" viewBox="0 0 64 64">
+            <ellipse cx="32" cy="32" rx="28" ry="28" fill="#222e38" stroke="#7fffd4" stroke-width="2"/>
+            <ellipse cx="32" cy="32" rx="18" ry="18" fill="#1a2a36" stroke="#2e8b57" stroke-width="2"/>
+            <ellipse cx="42" cy="32" rx="4" ry="4" class="cyborg-eye"/>
+            <rect x="28" y="44" width="8" height="6" rx="2" fill="#2e8b57"/>
+            <rect x="16" y="28" width="4" height="8" rx="2" fill="#7fffd4" opacity="0.5"/>
+            <rect x="44" y="28" width="4" height="8" rx="2" fill="#7fffd4" opacity="0.5"/>
+            <rect x="30" y="18" width="4" height="8" rx="2" fill="#7fffd4" opacity="0.5"/>
+        </svg>
+        <div class="login-title">Landmine Detector</div>
+        <div class="login-subtitle">Military Portal Login</div>
+        <form class="login-form" id="loginForm" autocomplete="off">
+            <input type="email" id="email" placeholder="Email" required autofocus />
+            <input type="password" id="password" placeholder="Password" required />
+            <button class="btn" type="submit">Login</button>
+        </form>
+        <div class="login-links">
+        </div>
+        <div class="error" id="errorMsg"></div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+      import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAYUuC-litG-rCv8KSsD-R3B1uWv3AuyVQ",
+        authDomain: "minedetectionrover.firebaseapp.com",
+        databaseURL: "https://minedetectionrover-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "minedetectionrover",
+        storageBucket: "minedetectionrover.appspot.com",
+        messagingSenderId: "127964216758",
+        appId: "1:127964216758:web:c7670710c374eb699dd517"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getDatabase(app);
+
+      const loginForm = document.getElementById("loginForm");
+      const errorMsg = document.getElementById("errorMsg");
+
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        errorMsg.textContent = "";
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        signInWithEmailAndPassword(auth, email, password)
+          .then(async (userCredential) => {
+            const uid = userCredential.user.uid;
+
+            // Fetch biodata
+            const bioRef = ref(db, "users/" + uid);
+            const snapshot = await get(bioRef);
+            const data = snapshot.val();
+
+            if (data) {
+              sessionStorage.setItem("loggedIn", "true");
+              sessionStorage.setItem("userBio", JSON.stringify(data));  // Save user info if needed later
+              window.location.href = "dashboard.html";
+            } else {
+              errorMsg.textContent = "Unauthorized Access – User data not found!";
+            }
+          })
+          .catch((error) => {
+            errorMsg.textContent = "Unauthorized Access – Invalid credentials!";
+          });
+      });
+    </script>
+</body>
+</html>

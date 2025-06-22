@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Landmine Detector | Military Tech</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Import a cool tech/military font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto Mono', 'Segoe UI', Arial, sans-serif;
+            overflow: hidden;
+            background: #0a141e;
+        }
+        .yt-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            min-width: 100vw; min-height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+            filter: grayscale(0.3) brightness(0.7) contrast(1.2) blur(1px);
+            border: none;
+            aspect-ratio: 16/9;
+        }
+        /* Make sure the iframe covers the viewport and is always centered */
+        .yt-bg {
+            width: 100vw;
+            height: 56.25vw; /* 16:9 aspect ratio */
+            min-height: 100vh;
+            min-width: 177.77vh; /* 16:9 aspect ratio */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: linear-gradient(120deg, rgba(10,20,30,0.85) 60%, rgba(46,139,87,0.3) 100%);
+            z-index: 2;
+        }
+        .content {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            color: #e0e8ef;
+            text-align: center;
+            text-shadow: 0 2px 16px #000, 0 0px 2px #2e8b57;
+            width: 90vw;
+            max-width: 700px;
+        }
+        .content h1 {
+            font-family: 'Orbitron', 'Roboto Mono', monospace;
+            font-size: 3.2em;
+            letter-spacing: 4px;
+            margin-bottom: 0.3em;
+            color: #7fffd4;
+            text-transform: uppercase;
+        }
+        .content h2 {
+            font-family: 'Orbitron', 'Roboto Mono', monospace;
+            font-size: 1.5em;
+            letter-spacing: 2px;
+            margin-bottom: 1em;
+            color: #fff;
+            text-transform: uppercase;
+        }
+        .content p {
+            font-size: 1.25em;
+            margin-bottom: 2em;
+            color: #b0c4de;
+            font-family: 'Roboto Mono', monospace;
+        }
+        .btn {
+            padding: 1em 2.5em;
+            font-size: 1.2em;
+            background: linear-gradient(90deg, #2e8b57 60%, #7fffd4 100%);
+            color: #0a141e;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Orbitron', 'Roboto Mono', monospace;
+            font-weight: 700;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 24px #0008;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #7fffd4 60%, #2e8b57 100%);
+            color: #222;
+            transform: scale(1.05);
+        }
+        .start-anim-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #0a141e;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease;
+        }
+        .start-anim-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .radar-svg {
+            width: 120px;
+            height: 120px;
+            display: block;
+        }
+        .radar-pulse {
+            stroke: #7fffd4;
+            stroke-width: 4;
+            fill: none;
+            opacity: 0.7;
+            animation: radar-pulse 1.2s infinite;
+        }
+        @keyframes radar-pulse {
+            0% {
+                r: 20;
+                opacity: 0.7;
+            }
+            80% {
+                r: 55;
+                opacity: 0.1;
+            }
+            100% {
+                r: 20;
+                opacity: 0.7;
+            }
+        }
+        .radar-center {
+            fill: #2e8b57;
+            stroke: #7fffd4;
+            stroke-width: 2;
+        }
+        .radar-text {
+            font-family: 'Orbitron', 'Roboto Mono', monospace;
+            fill: #7fffd4;
+            font-size: 1.1em;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            letter-spacing: 2px;
+        }
+        .landing-animation-text {
+            color: #00ffd0; /* Bright aqua for readability */
+            font-family: 'Orbitron', 'Roboto Mono', monospace;
+            font-size: 1.2em; /* Decreased from 2em to 1.2em */
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 12px #003c2f, 0 0 8px #7fffd4, 0 2px 8px #000, 0 0 2px #fff;
+            background: none;
+            margin-top: 0;
+            margin-bottom: 0;
+            text-align: center;
+        }
+        .landing-loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #0a141e;
+        }
+        .radar-outer {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 32px;
+        }
+        .radar-circle {
+            position: absolute;
+            top: 0; left: 0;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #7fffd4;
+            opacity: 0.18;
+            animation: radar-pulse 1.6s infinite;
+        }
+        @keyframes radar-pulse {
+            0% { transform: scale(0.8); opacity: 0.18;}
+            50% { transform: scale(1.1); opacity: 0.35;}
+            100% { transform: scale(0.8); opacity: 0.18;}
+        }
+        .radar-sweep {
+            position: absolute;
+            top: 0; left: 0;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #7fffd4 0deg 40deg,
+                transparent 40deg 360deg
+            );
+            opacity: 0.7;
+            animation: radar-sweep-spin 1.2s linear infinite;
+        }
+        @keyframes radar-sweep-spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+        .radar-dot {
+            position: absolute;
+            left: 50%; top: 50%;
+            width: 18px; height: 18px;
+            background: #2e8b57;
+            border: 3px solid #7fffd4;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 16px #7fffd4, 0 0 8px #2e8b57;
+        }
+        @media (max-width: 600px) {
+            .content h1 { font-size: 2em; }
+            .content h2 { font-size: 1em; }
+            .content p { font-size: 1em; }
+            .btn { font-size: 1em; padding: 0.7em 1.5em; }
+        }
+    </style>
+    <script>
+        // Redirect to login.html when button is clicked
+        function goToLogin() {
+            window.location.href = "login.html";
+        }
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var anim = document.getElementById('start-anim-overlay');
+                if (anim) anim.classList.add('fade-out');
+            }, 1200); // Animation duration
+        });
+    </script>
+</head>
+<body>
+    <div class="start-anim-overlay" id="start-anim-overlay">
+        <svg class="radar-svg" viewBox="0 0 100 100">
+            <circle class="radar-pulse" cx="50" cy="50" r="20"/>
+            <circle class="radar-center" cx="50" cy="50" r="16"/>
+            <text class="radar-text" x="50" y="54">LOADING</text>
+        </svg>
+    </div>
+    <iframe
+        class="yt-bg"
+        src="https://www.youtube.com/embed/a-m_mQmplds?autoplay=1&mute=1&controls=0&loop=1&playlist=a-m_mQmplds&modestbranding=1&showinfo=0&rel=0"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+    ></iframe>
+    <div class="overlay"></div>
+    <div class="content">
+        <h1>Landmine Detector</h1>
+        <h2>Military-Grade Safety & Precision</h2>
+        <p>
+            Harnessing advanced technology to detect and neutralize landmines.<br>
+            Protecting lives. Securing the future.<br>
+            <span style="color:#7fffd4;">Mission: Safe Terrain</span>
+        </p>
+        <button class="btn" onclick="goToLogin()">Explore Project</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign Up | Landmine Detector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto Mono', 'Segoe UI', Arial, sans-serif;
+      background: #0a141e;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .signup-container {
+      background: rgba(10, 20, 30, 0.92);
+      border-radius: 14px;
+      box-shadow: 0 4px 32px #000a;
+      padding: 1.2em 0.7em 1em 0.7em;
+      width: 92vw;
+      max-width: 320px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.7s;
+      margin: 18px 0;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .signup-title {
+      font-family: 'Orbitron', 'Roboto Mono', monospace;
+      color: #00ffd0;
+      font-size: 1.1em;
+      letter-spacing: 2px;
+      margin-bottom: 0.5em;
+      margin-top: 0.2em;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px #003c2f, 0 0 8px #7fffd4, 0 2px 8px #000;
+      filter: drop-shadow(0 0 6px #003c2f);
+      padding: 0.15em 0;
+      border-radius: 6px;
+      display: inline-block;
+      background: none;
+      word-break: break-word;
+      max-width: 90vw;
+    }
+    @media (max-width: 500px) {
+      .signup-container { max-width: 98vw; padding: 0.7em 0.1em 0.7em 0.1em; }
+      .signup-title { font-size: 0.95em; }
+    }
+    .signup-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6em;
+    }
+    .signup-form input {
+      padding: 0.9em 1em;
+      border-radius: 6px;
+      border: 1.5px solid #2e8b57;
+      background: #101c28;
+      color: #7fffd4;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1em;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .signup-form input:focus {
+      border: 1.5px solid #7fffd4;
+    }
+    .signup-btn {
+      padding: 1em 2.5em;
+      font-size: 1.1em;
+      background: linear-gradient(90deg, #2e8b57 60%, #7fffd4 100%);
+      color: #0a141e;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Orbitron', 'Roboto Mono', monospace;
+      font-weight: 700;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 24px #0008;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      outline: none;
+      margin-top: 0.5em;
+    }
+    .signup-btn:hover {
+      background: linear-gradient(90deg, #7fffd4 60%, #2e8b57 100%);
+      color: #222;
+      transform: scale(1.05);
+    }
+    .login-link {
+      margin-top: 1.2em;
+      color: #b0c4de;
+      font-size: 1em;
+      font-family: 'Roboto Mono', monospace;
+    }
+    .login-link a {
+      color: #7fffd4;
+      text-decoration: underline;
+      transition: color 0.2s;
+    }
+    .login-link a:hover {
+      color: #2e8b57;
+    }
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.98em;
+      margin-bottom: 0.5em;
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <div class="signup-title">Create Account</div>
+    <form class="signup-form" id="signupForm" autocomplete="off">
+      <div class="error-message" id="errorMsg"></div>
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="text" id="rank" placeholder="Rank" required />
+      <input type="text" id="regiment" placeholder="Regiment" required />
+      <input type="text" id="designation" placeholder="Designation" required />
+      <input type="text" id="captain" placeholder="Captain Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required minlength="6" />
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required minlength="6" />
+      <button type="submit" class="signup-btn">Sign Up</button>
+    </form>
+    <div class="login-link">
+      Already have an account? <a href="login.html">Login</a>
+    </div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYUuC-litG-rCv8KSsD-R3B1uWv3AuyVQ",
+      authDomain: "minedetectionrover.firebaseapp.com",
+      databaseURL: "https://minedetectionrover-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "minedetectionrover",
+      storageBucket: "minedetectionrover.appspot.com",
+      messagingSenderId: "127964216758",
+      appId: "1:127964216758:web:c7670710c374eb699dd517"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const signupForm = document.getElementById('signupForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.textContent = "";
+
+      const name = document.getElementById('name').value.trim();
+      const rank = document.getElementById('rank').value.trim();
+      const regiment = document.getElementById('regiment').value.trim();
+      const designation = document.getElementById('designation').value.trim();
+      const captain = document.getElementById('captain').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        errorMsg.textContent = "Passwords do not match.";
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, { displayName: name });
+        // Save user info to database
+        await set(ref(db, 'users/' + userCredential.user.uid), {
+          name: name,
+          rank: rank,
+          regiment: regiment,
+          designation: designation,
+          captain: captain,
+          email: email,
+          role: "user"
+        });
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        errorMsg.textContent = err.message.replace("Firebase: ", "");
+      }
+    });
+  </script>
+</body>
+</html>
